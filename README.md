@@ -1,12 +1,12 @@
 # RUN THIS
-rm -rf .git
-nvm use 18.0.0
-yarn install
-yarn dev
-yarn hardhat compile
-npx hardhat node
-yarn hardhat test
-yarn hardhat run scripts/deploy.js
+- rm -rf .git
+- nvm use 18.0.0
+- yarn install
+- yarn dev
+- yarn hardhat compile
+- npx hardhat node
+- yarn hardhat test
+- yarn hardhat run scripts/deploy.js
 
 
 <p align="center">
