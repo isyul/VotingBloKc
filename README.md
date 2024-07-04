@@ -1,3 +1,14 @@
+# RUN THIS
+rm -rf .git
+nvm use 18.0.0
+yarn install
+yarn dev
+yarn hardhat compile
+npx hardhat node
+yarn hardhat test
+yarn hardhat run scripts/deploy.js
+
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/26466516/107675802-36216b80-6c77-11eb-8db1-4d3407dc53d9.png" alt="Next.js and TypeScript">
 </p>

@@ -34,6 +34,14 @@ export default function Home({ pollsData }: { pollsData: PollStruct[] }) {
   before:z-[-1] before:bg-no-repeat before:bg-cover"
 /> */}
 
+{/* <div className="min-h-screen relative backdrop-noise absolute inset-0 isolate noise absolute inset-0 overlay absolute inset-0">
+  <div className="absolute inset-0 before:absolute before:inset-0
+    before:w-full before:h-full before:bg-gradient-to-br before:from-gray-900 before:via-gray-900 before:to-green-900
+    before:opacity-95 before:z-[-1] before:bg-no-repeat before:bg-cover before:bg-grain
+    absolute inset-0 isolate noise absolute inset-0 overlay absolute inset-0"
+  /> */}
+
+
 <div className="min-h-screen relative backdrop-noise absolute inset-0 isolate noise absolute inset-0 overlay absolute inset-0">
   {/* <div className="absolute inset-0 before:absolute before:inset-0
     before:w-full before:h-full before:bg-gradient-to-br before:from-gray-900 before:via-gray-900 before:to-green-900
@@ -43,7 +51,7 @@ export default function Home({ pollsData }: { pollsData: PollStruct[] }) {
 
 <div className="yellow blob"></div>
 <div className="red blob"></div>
-<div className="green blob"></div>
+<div className="blue blob"></div>
 
 
 <svg style={{ position: 'absolute', width: 0, height: 0 }}>
@@ -60,9 +68,13 @@ export default function Home({ pollsData }: { pollsData: PollStruct[] }) {
 
 
 
+
+
         <section className="relative px-5 py-10 space-y-16 text-white sm:p-10">
           <Navbar />
-          <Banner />
+          <Polls polls={polls} />
+
+
         </section>
         <CreatePoll />
       </div>

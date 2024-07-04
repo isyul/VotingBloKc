@@ -33,6 +33,8 @@ const CreatePoll: React.FC = () => {
             closeModal()
             console.log(tx)
             resolve(tx)
+            // Replace with your redirection logic
+            window.location.href = '/events'; // Redirect to event poll page upon success
           })
           .catch((error) => reject(error))
       }),
@@ -68,10 +70,10 @@ const CreatePoll: React.FC = () => {
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
     bg-black bg-opacity-80 transform z-50 transition-transform duration-300 ${createModal}`}
     >
-      <div className="bg-[#0B40C3] text-[#BBBBBB] shadow-lg shadow-[#1B5CFE] rounded-xl w-11/12 md:w-2/6 h-7/12 p-8">
+      <div className="bg-[#D1D5DC] text-[#151515] shadow-lg shadow-[#17A34A] rounded-xl w-11/12 md:w-2/6 h-7/12 p-8">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
-            <p className="font-semibold">Add Event</p>
+            <p className="font-semibold text-[25px]">Add Event</p>
             <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
               <FaTimes />
             </button>
@@ -81,10 +83,10 @@ const CreatePoll: React.FC = () => {
             onSubmit={handleSubmit}
             className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
           >
-            <div className="py-4 w-full border border-[#212D4A] rounded-full flex items-center px-4 mb-3 mt-2">
+            <div className="py-4 w-full border border-[#151515] rounded-full flex items-center px-4 mb-3 mt-2">
               <input
                 placeholder="Event Title"
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
                 name="title"
                 value={poll.title}
                 onChange={handleChange}
@@ -93,11 +95,11 @@ const CreatePoll: React.FC = () => {
             </div>
 
             <div
-              className="py-4 w-full border border-[#212D4A] rounded-full
+              className="py-4 w-full border border-[#151515] rounded-full
               flex items-center px-4 mb-3 mt-2 space-x-2 relative"
             >
               <span
-                className="bg-[#17007B] bg-opacity-30 text-[#4C6AD7]
+                className="bg-[#0B4426] bg-opacity-40 text-[#ffff]
                 absolute left-[2.5px] py-3 rounded-full px-5 w-48"
               >
                 <span className="text-transparent">.</span>
@@ -114,17 +116,17 @@ const CreatePoll: React.FC = () => {
             </div>
 
             <div
-              className="py-4 w-full border border-[#212D4A] rounded-full
+              className="py-4 w-full border border-[#151515] rounded-full
               flex items-center px-4 mb-3 mt-2 space-x-2 relative"
             >
               <span
-                className="bg-[#17007B] bg-opacity-30 text-[#4C6AD7]
+                className="bg-[#0B4426] bg-opacity-40 text-[#fff]
                 absolute left-[2.5px] py-3 rounded-full px-5 w-48"
               >
                 <span className="text-transparent">.</span>
               </span>
               <input
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
                 name="endsAt"
                 type="datetime-local"
                 value={poll.endsAt}
@@ -133,10 +135,10 @@ const CreatePoll: React.FC = () => {
               />
             </div>
 
-            <div className="py-4 w-full border border-[#212D4A] rounded-xl flex items-center px-4 h-20 mt-2">
+            <div className="py-4 w-full border border-[#151515] rounded-xl flex items-center px-4 h-20 mt-2">
               <textarea
-                placeholder="Poll Description"
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                placeholder="Event Description"
+                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
                 name="description"
                 value={poll.description}
                 onChange={handleChange}
@@ -146,7 +148,7 @@ const CreatePoll: React.FC = () => {
 
             <button
               className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
-              transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
+              transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
             >
               Create Event
             </button>

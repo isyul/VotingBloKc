@@ -28,7 +28,7 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
         <div
           className="w-full h-[257px] gap-[14px] rounded-[24px] space-y-5
-                md:w-[352px] md:h-[280px] bg-[#151515] px-[15px] py-[18px] md:px-[22px]"
+                md:w-[352px] md:h-[280px] bg-[#151515] bg-opacity-50 px-[15px] py-[18px] md:px-[22px]"
         >
           <h1 className="text-[18px] font-[600px]">
             {truncate({ text: poll.title, startChars: 30, endChars: 0, maxLength: 33 })}
@@ -55,7 +55,7 @@ const Poll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
           <button
             onClick={() => navigate.push('/polls/' + poll.id)}
-            className="h-[44px] w-full rounded-full transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
+            className="h-[44px] w-full rounded-full transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
           >
             Enter
           </button>

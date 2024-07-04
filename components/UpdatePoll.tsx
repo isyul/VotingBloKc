@@ -73,10 +73,10 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
     bg-black bg-opacity-50 transform z-50 transition-transform duration-300 ${updateModal}`}
     >
-      <div className="bg-[#0c0c10] text-[#BBBBBB] shadow-lg shadow-[#1B5CFE] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
+      <div className="bg-[#CFD3DA] text-[#151515] shadow-lg shadow-[#17A34A] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
-            <p className="font-semibold">Edit Event</p>
+            <p className="font-semibold text-[25px]">Edit Event</p>
             <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
               <FaTimes />
             </button>
@@ -86,10 +86,10 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
             onSubmit={handleUpdate}
             className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
           >
-            <div className="py-4 w-full border border-[#212D4A] rounded-full flex items-center px-4 mb-3 mt-2">
+            <div className="py-4 w-full border border-[#062213] rounded-full flex items-center px-4 mb-3 mt-2">
               <input
                 placeholder="Poll Title"
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                className="bg-transparent outline-none w-full placeholder-[#D2EEDF] text-sm"
                 name="title"
                 value={poll.title}
                 onChange={handleChange}
@@ -98,11 +98,11 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
             </div>
 
             <div
-              className="py-4 w-full border border-[#212D4A] rounded-full
+              className="py-4 w-full border border-[#062213] rounded-full
               flex items-center px-4 mb-3 mt-2 space-x-2 relative"
             >
               <span
-                className="bg-[#1B5CFE] bg-opacity-20 text-[#4C6AD7]
+                className="bg-[#17A34A] bg-opacity-20 text-[#17A34A]
                 absolute left-[2.5px] py-3 rounded-full px-5 w-48"
               >
                 <span className="text-transparent">.</span>
@@ -119,17 +119,17 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
             </div>
 
             <div
-              className="py-4 w-full border border-[#212D4A] rounded-full
+              className="py-4 w-full border border-[#062213] rounded-full
               flex items-center px-4 mb-3 mt-2 space-x-2 relative"
             >
               <span
-                className="bg-[#1B5CFE] bg-opacity-20 text-[#4C6AD7]
+                className="bg-[#17A34A] bg-opacity-20 text-[#17A34A]
                 absolute left-[2.5px] py-3 rounded-full px-5 w-48"
               >
                 <span className="text-transparent">.</span>
               </span>
               <input
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                className="bg-transparent outline-none w-full placeholder-[#D2EEDF] text-sm"
                 name="endsAt"
                 type="datetime-local"
                 value={poll.endsAt}
@@ -138,10 +138,10 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
               />
             </div>
 
-            <div className="py-4 w-full border border-[#212D4A] rounded-xl flex items-center px-4 h-20 mt-2">
+            <div className="py-4 w-full border border-[#062213] rounded-xl flex items-center px-4 h-20 mt-2">
               <textarea
                 placeholder="Poll Description"
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                className="bg-transparent outline-none w-full placeholder-[#D2EEDF] text-sm"
                 name="description"
                 value={poll.description}
                 onChange={handleChange}
@@ -151,7 +151,7 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
 
             <button
               className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
-              transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
+              transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
             >
               Update Event
             </button>

@@ -8,6 +8,7 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
     Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    overflow: hidden; /* Prevent scrolling */
 }
 
 a {
@@ -18,3 +19,178 @@ a {
 * {
   box-sizing: border-box;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+:root {
+  --bg: #0a0429;
+  --text: #151515;
+  --yellow: #231e54;
+  --red: #2e2194;
+  --blue: #2e2194;
+  --green: #1c8a52;
+  --scale: 10;
+}
+
+
+body {
+  /* height: 100vh;
+  margin: 0;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3em;
+   */
+  background-color: var(--bg);
+  /* font-family: ""; */
+/*   
+  margin: 0 10em; */
+}
+/* 
+h1 {
+  font-size: 60px;
+  font-weight: normal;
+  margin: 0;
+}
+
+h2 {
+  font-size: 32px;
+}
+
+p {
+  font-size: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+} */
+
+body::before,
+body::after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  content: '';
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+
+  opacity: 15%;
+}
+
+body::before {
+  background: #020008;
+  filter: url(#noiseFilter);
+}
+
+
+/* Blobs */
+.blob-cont {
+    transform: scale(var(--scale));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: -2;
+  height: 500px;
+  width: 500px;
+  position: relative;
+  right: 5em;
+}
+
+
+.blob {
+    transform: scale(var(--scale));
+  border-radius: 500px;
+  filter: blur(80px);
+}
+
+.yellow {
+  transform: scale(var(--scale));
+  background-color: var(--yellow);
+  position: fixed; /* Use fixed positioning to position relative to the viewport */
+  bottom: 0; /* Place at the top of the viewport */
+  left: 0; /* Place at the left of the viewport */
+  height: 800px;
+  width: 600px;
+  animation: yellow 16s infinite ease;
+}
+
+.green {
+    transform: scale(var(--scale));
+  background-color: var(--green);
+  position: absolute;
+  top: 80px;
+  right: -10px;
+  height: 800px;
+  width: 1050px;
+  
+  animation: green 12s infinite ease;
+}
+
+.blue {
+  transform: scale(var(--scale));
+background-color: var(--blue);
+position: absolute;
+top: 80px;
+right: -10px;
+height: 800px;
+width: 1050px;
+
+animation: blue 12s infinite ease;
+}
+
+.red {
+    transform: scale(var(--scale));
+  background-color: var(--red);
+  position: absolute;
+  top: 80px;
+  right: -20px;
+  height: 1500px;
+  width: 1000px;
+  
+  animation: red 20s infinite linear;
+}
+
+@keyframes yellow {
+  0% { bottom: 1000px; left: 0; transform: scale(1.2); }
+  30% { bottom: 700; left: 20px; transform: scale(1.4); }
+  60% { bottom: 800px; left: 10px; transform: scale(1.6); }
+  100% { bottom: 1000px; left: 0; transform: scale(1.2); }
+}
+
+
+@keyframes green {
+  0% { top: 1000px; right: 0; transform: scale(1.2); }
+  30% { top: 700; right: 20px; transform: scale(1.4); }
+  60% { top: 800px; right: 10px; transform: scale(1.6); }
+  100% { top: 1000px; right: 0; transform: scale(1.2); }
+}
+
+@keyframes blue {
+  0% { top: 1000px; right: 0; transform: scale(1.2); }
+  30% { top: 700; right: 20px; transform: scale(1.4); }
+  60% { top: 800px; right: 10px; transform: scale(1.6); }
+  100% { top: 1000px; right: 0; transform: scale(1.2); }
+}
+
+@keyframes red {
+  0% { top: 1000px; right: 0; transform: scale(1.2); }
+  30% { top: 700; right: 20px; transform: scale(1.4); }
+  60% { top: 800px; right: 10px; transform: scale(1.6); }
+  100% { top: 1000px; right: 0; transform: scale(1.2); }
+}
+

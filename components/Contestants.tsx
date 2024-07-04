@@ -48,7 +48,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
   return (
     <div className="flex justify-start items-center space-x-2 md:space-x-8 mt-5 md:mx-auto">
       <div
-        className="bg-[#151515] h-[229px] w-[200px] sm:w-[280px] sm:h-fit rounded-[24px]
+        className="bg-[#151515] bg-opacity-70 h-[229px] w-[200px] sm:w-[280px] sm:h-fit rounded-[24px]
         space-y-2 flex justify-center items-center flex-col pt-6 pb-6 px-3"
       >
         <h1 className="text-[16px] sm:text-[20px] font-[600px]">{contestant.name}</h1>
@@ -77,7 +77,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
             Date.now() < poll.startsAt ||
             Date.now() >= poll.endsAt
               ? 'bg-[#B0BAC9] cursor-not-allowed'
-              : 'bg-[#1B5CFE]'
+              : 'bg-[#17A34A]'
           }`}
         >
           {wallet && contestant.voters.includes(wallet) ? 'Voted' : 'Vote'}
@@ -85,7 +85,7 @@ const Contestant: React.FC<{ contestant: ContestantStruct; poll: PollStruct }> =
 
         <div className="w-[86px] h-[32px] flex items-center justify-center gap-3">
           <div className="w-[32px] h-[32px] rounded-[9px] py-[6px] px-[7px] bg-[#0E1933]">
-            <BiUpvote size={20} className="text-[#1B5CFE]" />
+            <BiUpvote size={20} className="text-[#1DAB60]" />
           </div>
           <p className="text-[14px] font-[600px]">{contestant.votes} vote</p>
         </div>

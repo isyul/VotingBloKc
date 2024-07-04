@@ -58,10 +58,10 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
     bg-black bg-opacity-80 transform z-50 transition-transform duration-300 ${contestModal}`}
     >
-      <div className="bg-[#0B40C3] text-[#BBBBBB] shadow-lg shadow-[#1B5CFE] rounded-xl w-11/12 md:w-1/4 h-7/12 p-6">
+      <div className="bg-[#CFD3DA] text-[#151515] shadow-lg shadow-[#17A34A] rounded-xl w-11/12 md:w-1/4 h-7/12 p-6">
         <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
-            <p className="font-semibold">Become a Contestant</p>
+            <p className="font-semibold text-[25px]">Become a Contestant</p>
             <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
               <FaTimes />
             </button>
@@ -71,10 +71,10 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             onClick={handleSubmit}
             className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
           >
-            <div className="py-4 w-full border border-[#212D4A] rounded-full flex items-center px-4 mb-3 mt-2">
+            <div className="py-4 w-full border border-[#151515] rounded-full flex items-center px-4 mb-3 mt-2">
               <input
                 placeholder="Contestant Name"
-                className="bg-transparent outline-none w-full placeholder-[#929292] text-sm"
+                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
                 name="name"
                 value={contestant.name}
                 onChange={handleChange}
@@ -84,7 +84,7 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
             <button
               className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
-                transition-all duration-300 bg-[#1B5CFE] hover:bg-blue-500"
+                transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
             >
               ADD
             </button>
