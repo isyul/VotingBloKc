@@ -26,8 +26,8 @@
 <br>
 
 
-# Hardhat-Tailwind-NextJs Ethers Starter Kit
-Speedily develope your decentralized application with this NextJs starter kit for free. It has Redux-Toolkit, NextJs 13, React 18, Hardhat, EthersJs, Tailwind, etc.
+# Student Council Election Voting Platform
+Secure and transparent voting platform for student council elections built with blockchain technology. This application uses NextJS 13, React 18, Hardhat, EthersJS, and Tailwind CSS to provide a modern and secure voting experience.
 
 Follow the steps below to download, install, and run this project.
 

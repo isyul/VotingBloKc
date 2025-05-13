@@ -130,7 +130,8 @@ const contestPoll = async (id: number, name: string) => {
 
   try {
     const contract = await getEthereumContract()
-    const tx = await contract.contest(id, name)
+    const avatarUrl = `https://api.dicebear.com/6.x/initials/svg?seed=${name}`
+    const tx = await contract.contest(id, name, avatarUrl)
 
     await tx.wait()
     const poll = await getPoll(id)

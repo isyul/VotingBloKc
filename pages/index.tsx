@@ -25,7 +25,7 @@ export default function Home({ pollsData }: { pollsData: PollStruct[] }) {
   return (
     <>
       <Head>
-        <title>Available Polls</title>
+        <title>Student Council Elections</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* <div className="min-h-screen relative backdrop-blur">
@@ -36,7 +36,7 @@ export default function Home({ pollsData }: { pollsData: PollStruct[] }) {
 
 {/* Replacing animated background with static gradient */}
 <div className="min-h-screen relative">
-  <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 opacity-95 z-[-1]"></div>
+  <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900 opacity-95 z-[-1]"></div>
 
 {/* Commenting out animated elements
 <div className="min-h-screen relative backdrop-noise absolute inset-0 isolate noise absolute inset-0 overlay absolute inset-0">

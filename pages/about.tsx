@@ -12,13 +12,13 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>ChainVote</title>
+        <title>StudentVote - About</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
       {/* Static gradient background */}
       <div className="min-h-screen relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-green-900 opacity-95 z-[-1]"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-900 opacity-95 z-[-1]"></div>
 
         <section className="relative px-5 py-10 space-y-16 text-white sm:p-10">
           <Navbar />

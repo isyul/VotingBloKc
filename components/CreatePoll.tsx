@@ -2,7 +2,7 @@ import { createPoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { PollParams, RootState } from '@/utils/types'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import { FaTimes, FaCalendarAlt, FaRegClock, FaEdit, FaHeading } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
@@ -34,13 +34,13 @@ const CreatePoll: React.FC = () => {
             console.log(tx)
             resolve(tx)
             // Replace with your redirection logic
-            window.location.href = '/events'; // Redirect to event poll page upon success
+            window.location.href = '/events'; // Redirect to election page upon success
           })
           .catch((error) => reject(error))
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Poll created successfully 👌',
+        success: 'Election created successfully 👌',
         error: 'Encountered error 🤯',
       }
     )
@@ -57,7 +57,6 @@ const CreatePoll: React.FC = () => {
   const closeModal = () => {
     dispatch(setCreateModal('scale-0'))
     setPoll({
-
       title: '',
       description: '',
       startsAt: '',
@@ -70,87 +69,110 @@ const CreatePoll: React.FC = () => {
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
     bg-black bg-opacity-80 transform z-50 transition-transform duration-300 ${createModal}`}
     >
-      <div className="bg-[#D1D5DC] text-[#151515] shadow-lg shadow-[#17A34A] rounded-xl w-11/12 md:w-2/6 h-7/12 p-8">
+      <div className="bg-white text-gray-800 shadow-xl shadow-blue-500/20 rounded-xl w-11/12 md:w-2/5 max-w-2xl p-6">
         <div className="flex flex-col">
-          <div className="flex flex-row justify-between items-center">
-            <p className="font-semibold text-[25px]">Add Event</p>
-            <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
-              <FaTimes />
+          <div className="flex flex-row justify-between items-center mb-6 border-b border-gray-200 pb-4">
+            <h2 className="font-bold text-2xl text-blue-600">Create Election</h2>
+            <button 
+              onClick={closeModal} 
+              className="text-gray-500 hover:text-red-500 transition-colors focus:outline-none"
+            >
+              <FaTimes size={20} />
             </button>
           </div>
 
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
+            className="flex flex-col justify-center items-start space-y-6"
           >
-            <div className="py-4 w-full border border-[#151515] rounded-full flex items-center px-4 mb-3 mt-2">
-              <input
-                placeholder="Event Title"
-                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
-                name="title"
-                value={poll.title}
-                onChange={handleChange}
-                required
-              />
+            {/* Title Field */}
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Election Title
+              </label>
+              <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50 p-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 mr-3">
+                  <FaHeading className="text-sm" />
+                </div>
+                <input
+                  placeholder="Enter the election title"
+                  className="bg-transparent outline-none w-full text-gray-800 text-sm"
+                  name="title"
+                  value={poll.title}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+            
+            {/* Date Pickers Group */}
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-2 text-gray-700">Election Period</label>
+              
+              {/* Start Date */}
+              <div className="mb-3">
+                <label className="block text-xs text-gray-600 mb-1">Start Date & Time</label>
+                <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50 p-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 mr-3">
+                    <FaCalendarAlt className="text-sm" />
+                  </div>
+                  <input
+                    className="outline-none w-full text-sm bg-transparent"
+                    name="startsAt"
+                    type="datetime-local"
+                    value={poll.startsAt}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+              
+              {/* End Date */}
+              <div>
+                <label className="block text-xs text-gray-600 mb-1">End Date & Time</label>
+                <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50 p-3">
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 mr-3">
+                    <FaRegClock className="text-sm" />
+                  </div>
+                  <input
+                    className="outline-none w-full text-sm bg-transparent"
+                    name="endsAt"
+                    type="datetime-local"
+                    value={poll.endsAt}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
             </div>
 
-            <div
-              className="py-4 w-full border border-[#151515] rounded-full
-              flex items-center px-4 mb-3 mt-2 space-x-2 relative"
-            >
-              <span
-                className="bg-[#0B4426] bg-opacity-40 text-[#ffff]
-                absolute left-[2.5px] py-3 rounded-full px-5 w-48"
-              >
-                <span className="text-transparent">.</span>
-              </span>
-              <input
-                className="bg-transparent outline-none w-full placeholder-transparent text-sm"
-                name="startsAt"
-                type="datetime-local"
-                placeholder="Start Date"
-                value={poll.startsAt}
-                onChange={handleChange}
-                required
-              />
+            {/* Description Field */}
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Election Description
+              </label>
+              <div className="flex items-start border border-gray-300 rounded-lg bg-gray-50 p-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 mr-3 mt-1">
+                  <FaEdit className="text-sm" />
+                </div>
+                <textarea
+                  placeholder="Describe the purpose and rules of this election"
+                  className="bg-transparent outline-none w-full text-gray-800 text-sm min-h-[100px] resize-none"
+                  name="description"
+                  value={poll.description}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
-            <div
-              className="py-4 w-full border border-[#151515] rounded-full
-              flex items-center px-4 mb-3 mt-2 space-x-2 relative"
-            >
-              <span
-                className="bg-[#0B4426] bg-opacity-40 text-[#fff]
-                absolute left-[2.5px] py-3 rounded-full px-5 w-48"
-              >
-                <span className="text-transparent">.</span>
-              </span>
-              <input
-                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
-                name="endsAt"
-                type="datetime-local"
-                value={poll.endsAt}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="py-4 w-full border border-[#151515] rounded-xl flex items-center px-4 h-20 mt-2">
-              <textarea
-                placeholder="Event Description"
-                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
-                name="description"
-                value={poll.description}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
+            {/* Submit Button */}
             <button
-              className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
-              transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
+              className="h-12 w-full rounded-lg font-bold
+              transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white
+              flex items-center justify-center mt-4"
             >
-              Create Event
+              Create Election
             </button>
           </form>
         </div>

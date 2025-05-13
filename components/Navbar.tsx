@@ -11,24 +11,24 @@ const Navbar = () => {
     <nav
       className="h-[80px] flex justify-between items-center px-5 rounded-full"
     >
-      <Link href="/" className="text-[20px] text-green-800 sm:text-[24px]">
-        <span className="text-green-500 font-bold">ChainVote</span>
+      <Link href="/" className="text-[20px] text-blue-800 sm:text-[24px]">
+        <span className="text-blue-500 font-bold">StudentVote</span>
       </Link>
       <div className="flex items-center space-x-10">
-      <Link href="/" className="text-[20px] text-white font hover:text-green-400">
+      <Link href="/" className="text-[20px] text-white font hover:text-blue-400">
           Home
         </Link>
-        <Link href="/events" className="text-[20px] text-white font hover:text-green-400">
-          Events
+        <Link href="/events" className="text-[20px] text-white font hover:text-blue-400">
+          Elections
         </Link>
-        <Link href="/about" className="text-[20px] text-white font hover:text-green-400">
+        <Link href="/about" className="text-[20px] text-white font hover:text-blue-400">
           About
         </Link>
       {wallet ? (
         <button
           className="h-[48px] w-[130px] 
           sm:w-[148px] px-3 rounded-full text-sm font-bold
-          transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
+          transition-all duration-300 bg-[#3B82F6] hover:bg-blue-400"
         >
           {truncate({ text: wallet, startChars: 4, endChars: 4, maxLength: 11 })}
         </button>
@@ -36,7 +36,7 @@ const Navbar = () => {
         <button
           className="h-[48px] w-[130px] 
           sm:w-[148px] px-3 rounded-full text-sm font-bold
-          transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
+          transition-all duration-300 bg-[#3B82F6] hover:bg-blue-400"
           onClick={connectWallet}
         >
           Connect wallet

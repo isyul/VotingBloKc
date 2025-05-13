@@ -60,6 +60,10 @@ contract DappVotes {
     poll.endsAt = endsAt;
     poll.director = msg.sender;
     poll.timestamp = currentTime();
+    
+    // Initialize empty arrays
+    poll.voters = new address[](0);
+    poll.avatars = new string[](0);
 
     polls[poll.id] = poll;
     pollExist[poll.id] = true;
@@ -115,9 +119,10 @@ contract DappVotes {
     }
   }
 
-  function contest(uint id, string memory name) public {
+  function contest(uint id, string memory name, string memory avatar) public {
     require(pollExist[id], 'Poll not found');
     require(bytes(name).length > 0, 'name cannot be empty');
+    require(bytes(avatar).length > 0, 'Image URL cannot be empty');
     require(polls[id].votes < 1, 'Poll has votes already');
     require(!contested[id][msg.sender], 'Already contested');
 
@@ -131,6 +136,7 @@ contract DappVotes {
     contestants[id][contestant.id] = contestant;
     contested[id][msg.sender] = true;
     polls[id].contestants++;
+    polls[id].avatars.push(avatar);
   }
 
   function getContestant(uint id, uint cid) public view returns (ContestantStruct memory) {

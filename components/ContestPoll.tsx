@@ -2,7 +2,7 @@ import { contestPoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { PollStruct, RootState } from '@/utils/types'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { FaTimes } from 'react-icons/fa'
+import { FaTimes, FaUser } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
@@ -40,7 +40,7 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
       }),
       {
         pending: 'Approve transaction...',
-        success: 'Poll contested successfully 👌',
+        success: 'Candidate added successfully 👌',
         error: 'Encountered error 🤯',
       }
     )
@@ -58,35 +58,48 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
       className={`fixed top-0 left-0 w-screen h-screen flex items-center justify-center
     bg-black bg-opacity-80 transform z-50 transition-transform duration-300 ${contestModal}`}
     >
-      <div className="bg-[#CFD3DA] text-[#151515] shadow-lg shadow-[#17A34A] rounded-xl w-11/12 md:w-1/4 h-7/12 p-6">
+      <div className="bg-white text-gray-800 shadow-xl shadow-blue-500/20 rounded-xl w-11/12 md:w-1/3 max-w-md p-6">
         <div className="flex flex-col">
-          <div className="flex flex-row justify-between items-center">
-            <p className="font-semibold text-[25px]">Become a Contestant</p>
-            <button onClick={closeModal} className="border-0 bg-transparent focus:outline-none">
-              <FaTimes />
+          <div className="flex flex-row justify-between items-center mb-6 border-b border-gray-200 pb-4">
+            <h2 className="font-bold text-2xl text-blue-600">Become a Candidate</h2>
+            <button 
+              onClick={closeModal} 
+              className="text-gray-500 hover:text-red-500 transition-colors focus:outline-none"
+            >
+              <FaTimes size={20} />
             </button>
           </div>
 
           <form
-            onClick={handleSubmit}
-            className="flex flex-col justify-center items-start rounded-xl mt-5 mb-5"
+            onSubmit={handleSubmit}
+            className="flex flex-col justify-center items-start space-y-6"
           >
-            <div className="py-4 w-full border border-[#151515] rounded-full flex items-center px-4 mb-3 mt-2">
-              <input
-                placeholder="Contestant Name"
-                className="bg-transparent outline-none w-full placeholder-[#151515] text-sm"
-                name="name"
-                value={contestant.name}
-                onChange={handleChange}
-                required
-              />
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-2 text-gray-700">
+                Candidate Name
+              </label>
+              <div className="flex items-center border border-gray-300 rounded-lg bg-gray-50 p-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-500 mr-3">
+                  <FaUser className="text-sm" />
+                </div>
+                <input
+                  placeholder="Enter your full name"
+                  className="bg-transparent outline-none w-full text-gray-800 text-sm"
+                  name="name"
+                  value={contestant.name}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
             </div>
 
             <button
-              className="h-[48px] w-full block mt-2 px-3 rounded-full text-sm font-bold
-                transition-all duration-300 bg-[#17A34A] hover:bg-green-400"
+              className="h-12 w-full rounded-lg font-bold
+                transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white
+                flex items-center justify-center"
+              type="submit"
             >
-              ADD
+              Register as Candidate
             </button>
           </form>
         </div>

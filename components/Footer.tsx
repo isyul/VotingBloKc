@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
                 Security | Transparency | Accessibility
             </div>
             <div>
-            © Jakob Maraguinot | Fernando Maldonado | Joshua Sevilla
+            © Developers to be added
             </div>
         </footer>
     );
