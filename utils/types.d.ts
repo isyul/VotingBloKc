@@ -8,8 +8,8 @@ export interface TruncateParams {
 export interface PollParams {
   title: string
   description: string
-  startsAt: number | string
-  endsAt: number | string
+  startsAt: number
+  endsAt: number
 }
 
 export interface PollStruct {

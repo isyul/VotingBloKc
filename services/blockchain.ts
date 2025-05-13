@@ -71,14 +71,78 @@ const createPoll = async (data: PollParams) => {
   try {
     const contract = await getEthereumContract()
     const {title, description, startsAt, endsAt } = data
-    const tx = await contract.createPoll(title, description, startsAt, endsAt)
+    
+    // Validate the data to avoid NaN errors
+    if (!title || !description) {
+      reportError('Title and description are required')
+      return Promise.reject(new Error('Title and description are required'))
+    }
+    
+    // The contract expects timestamps in milliseconds
+    // But make sure we have valid numbers first
+    const startAtNum = Number(startsAt)
+    const endAtNum = Number(endsAt)
+    
+    if (isNaN(startAtNum) || isNaN(endAtNum)) {
+      reportError('Invalid start or end time')
+      return Promise.reject(new Error('Invalid start or end time'))
+    }
+    
+    console.log('Attempting to create poll with data:', {
+      title,
+      description: description.substring(0, 50) + '...',
+      startsAt: new Date(startAtNum).toISOString(),
+      endsAt: new Date(endAtNum).toISOString()
+    })
 
+    // Get gas price for better estimation
+    const provider = new ethers.providers.Web3Provider(ethereum)
+    const gasPrice = await provider.getGasPrice()
+    console.log('Current gas price:', ethers.utils.formatUnits(gasPrice, 'gwei'), 'gwei')
+    
+    // Set explicit gas limits to avoid estimation errors
+    const txOptions = {
+      gasLimit: 3000000,
+      gasPrice: gasPrice.mul(120).div(100) // 20% higher than current gas price
+    }
+    
+    console.log('Using transaction options:', txOptions)
+    
+    const tx = await contract.createPoll(
+      title, 
+      description, 
+      startAtNum, 
+      endAtNum,
+      txOptions
+    )
+
+    console.log('Transaction sent:', tx.hash)
+    
     await tx.wait()
+    console.log('Transaction confirmed')
+    
     const polls = await getPolls()
     store.dispatch(setPolls(polls))
     return Promise.resolve(tx)
-  } catch (error) {
-    reportError(error)
+  } catch (error: any) {
+    console.error('Transaction error:', error)
+    
+    // More detailed error logging
+    if (error.code) {
+      console.error(`Error code: ${error.code}`)
+    }
+    
+    if (error.message) {
+      console.error(`Error message: ${error.message}`)
+    }
+    
+    if (error.data) {
+      console.error(`Error data: ${JSON.stringify(error.data)}`)
+    }
+    
+    // User-friendly error message
+    const errorMessage = error.message || 'Transaction failed. Please try again.'
+    reportError(errorMessage)
     return Promise.reject(error)
   }
 }
@@ -92,14 +156,71 @@ const updatePoll = async (id: number, data: PollParams) => {
   try {
     const contract = await getEthereumContract()
     const {title, description, startsAt, endsAt } = data
-    const tx = await contract.updatePoll(id, title, description, startsAt, endsAt)
+    
+    // Validate the data to avoid NaN errors
+    if (!title || !description) {
+      reportError('Title and description are required')
+      return Promise.reject(new Error('Title and description are required'))
+    }
+    
+    // Ensure startAt and endAt are valid timestamps
+    const startAtNum = Number(startsAt)
+    const endAtNum = Number(endsAt)
+    
+    if (isNaN(startAtNum) || isNaN(endAtNum)) {
+      reportError('Invalid start or end time')
+      return Promise.reject(new Error('Invalid start or end time'))
+    }
+    
+    console.log('Attempting to update poll with data:', {
+      id,
+      title,
+      description: description.substring(0, 50) + '...',
+      startsAt: startAtNum,
+      endsAt: endAtNum
+    })
+    
+    // Set explicit gas limits to avoid estimation errors
+    const gasLimit = 3000000; // Explicit high gas limit
+    
+    const tx = await contract.updatePoll(
+      id, 
+      title, 
+      description, 
+      startAtNum, 
+      endAtNum,
+      { 
+        gasLimit
+      }
+    )
 
+    console.log('Transaction sent:', tx.hash)
+    
     await tx.wait()
+    console.log('Transaction confirmed')
+    
     const poll = await getPoll(id)
     store.dispatch(setPoll(poll))
     return Promise.resolve(tx)
-  } catch (error) {
-    reportError(error)
+  } catch (error: any) {
+    console.error('Transaction error:', error)
+    
+    // More detailed error logging
+    if (error.code) {
+      console.error(`Error code: ${error.code}`)
+    }
+    
+    if (error.message) {
+      console.error(`Error message: ${error.message}`)
+    }
+    
+    if (error.data) {
+      console.error(`Error data: ${JSON.stringify(error.data)}`)
+    }
+    
+    // User-friendly error message
+    const errorMessage = error.message || 'Transaction failed. Please try again.'
+    reportError(errorMessage)
     return Promise.reject(error)
   }
 }
