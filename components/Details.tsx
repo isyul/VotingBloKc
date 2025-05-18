@@ -1,14 +1,35 @@
 import { formatDate, truncate } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
 import { PollStruct, RootState } from '@/utils/types'
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import { MdModeEdit, MdDelete, MdHowToVote, MdDateRange, MdPerson } from 'react-icons/md'
 import { useDispatch, useSelector } from 'react-redux'
+import { debounceCallback } from '@/utils/interactionHandler'
 
 const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
-  const { setContestModal, setUpdateModal, setDeleteModal } = globalActions
+  const { setUpdateModal, setDeleteModal } = globalActions
   const { wallet } = useSelector((states: RootState) => states.globalStates)
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null)
+
+  // Create debounced handlers for modal actions
+  const handleEditAction = useCallback(
+    debounceCallback(() => {
+      setActionInProgress('edit');
+      dispatch(setUpdateModal('scale-100'));
+      setTimeout(() => setActionInProgress(null), 500);
+    }),
+    [dispatch, setUpdateModal]
+  );
+
+  const handleDeleteAction = useCallback(
+    debounceCallback(() => {
+      setActionInProgress('delete');
+      dispatch(setDeleteModal('scale-100'));
+      setTimeout(() => setActionInProgress(null), 500);
+    }),
+    [dispatch, setDeleteModal]
+  );
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4">
@@ -57,32 +78,25 @@ const Details: React.FC<{ poll: PollStruct }> = ({ poll }) => {
         
         {/* Actions */}
         <div className="flex flex-wrap gap-3 justify-center">
-          {poll.votes < 1 && (
-            <button
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium
-                bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white transition-all"
-              onClick={() => dispatch(setContestModal('scale-100'))}
-            >
-              <MdPerson className="text-xl" />
-              Become Candidate
-            </button>
-          )}
-          
           {wallet && wallet === poll.director && poll.votes < 1 && (
             <>
               <button
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
-                  bg-blue-900/50 hover:bg-blue-800/70 border border-blue-700/50 text-white transition-all"
-                onClick={() => dispatch(setUpdateModal('scale-100'))}
+                className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+                  bg-blue-900/50 hover:bg-blue-800/70 border border-blue-700/50 text-white transition-all
+                  ${actionInProgress === 'edit' ? 'opacity-70 cursor-wait' : ''}`}
+                onClick={handleEditAction}
+                disabled={actionInProgress !== null}
               >
                 <MdModeEdit className="text-xl" />
                 Edit Election
               </button>
               
               <button
-                className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
-                  bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-white transition-all"
-                onClick={() => dispatch(setDeleteModal('scale-100'))}
+                className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+                  bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-white transition-all
+                  ${actionInProgress === 'delete' ? 'opacity-70 cursor-wait' : ''}`}
+                onClick={handleDeleteAction}
+                disabled={actionInProgress !== null}
               >
                 <MdDelete className="text-xl text-red-400" />
                 Delete Election

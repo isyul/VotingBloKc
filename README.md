@@ -1,14 +1,3 @@
-# RUN THIS
-- rm -rf .git
-- nvm use 18.0.0
-- yarn install
-- yarn dev
-- yarn hardhat compile
-- npx hardhat node
-- yarn hardhat test
-- yarn hardhat run scripts/deploy.js
-
-
 <p align="center">
   <img src="https://user-images.githubusercontent.com/26466516/107675802-36216b80-6c77-11eb-8db1-4d3407dc53d9.png" alt="Next.js and TypeScript">
 </p>
@@ -32,25 +21,29 @@ Secure and transparent voting platform for student council elections built with 
 Follow the steps below to download, install, and run this project.
 
 ## Dependencies
-Install these prerequisites to follow along with the tutorial. See free video tutorial or a full explanation of each prerequisite.
+Install these prerequisites to follow along with the tutorial.
 - NPM: https://nodejs.org
+- Yarn: https://classic.yarnpkg.com/en/
 - Hardhat: https://hardhat.org/
-- EthersJs: https://ethers.org/
-- Tailwind CSS: https://tailwindcss.com/
 
 
 ## Step 1. Clone the project
-`git clone https://github.com/Daltonic/hardhat_ethersjs_next_starter_app <PROJECT NAME>`
+`git clone https://github.com/isyul/VotingBloKc <PROJECT NAME>`
 
 ## Step 2. Install dependencies
 ```sh
 $ cd <PROJECT NAME>
-$ yarn install # or npm install
+$ npm install --global yarn
+$ yarn install
 ```
-## Step 3. Start Hardhat Node
+## Step 3. Setup Hardhat Node
 Open the terminal and run the command below.
 ```sh
-$ yarn hardhat node
+$ yarn add --dev hardhat
+$ yarn hardhat compile
+$ yarn hardhat node (Setup Metamask after)
+$ yarn hardhat test
+$ yarn hardhat run scripts/deploy.js
 ```
 
 ## Step 4. Run the Front End Application

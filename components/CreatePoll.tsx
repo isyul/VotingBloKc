@@ -5,11 +5,12 @@ import React, { ChangeEvent, FormEvent, useState } from 'react'
 import { FaTimes, FaCalendarAlt, FaRegClock, FaEdit, FaHeading } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { checkWalletConnection } from '@/utils/errorHandler'
 
 const CreatePoll: React.FC = () => {
   const dispatch = useDispatch()
   const { setCreateModal } = globalActions
-  const { createModal } = useSelector((states: RootState) => states.globalStates)
+  const { createModal, wallet } = useSelector((states: RootState) => states.globalStates)
 
   const [poll, setPoll] = useState<PollParams>({
     title: '',
@@ -21,10 +22,30 @@ const CreatePoll: React.FC = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (!poll.title || !poll.description || !poll.startsAt || !poll.endsAt) return
+    // Validate form
+    if (!poll.title || !poll.description || !poll.startsAt || !poll.endsAt) {
+      toast.warn('Please fill in all required fields')
+      return
+    }
+
+    // Check wallet connection first
+    if (!checkWalletConnection(wallet)) {
+      return
+    }
 
     poll.startsAt = new Date(poll.startsAt).getTime()
     poll.endsAt = new Date(poll.endsAt).getTime()
+
+    // Validate poll dates
+    if (poll.startsAt <= Date.now()) {
+      toast.warn('Start date must be in the future')
+      return
+    }
+
+    if (poll.endsAt <= poll.startsAt) {
+      toast.warn('End date must be after start date')
+      return
+    }
 
     await toast.promise(
       new Promise<void>((resolve, reject) => {

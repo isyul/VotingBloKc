@@ -4,6 +4,7 @@ import { globalActions } from '@/store/globalSlices'
 import address from '@/artifacts/contractAddress.json'
 import abi from '@/artifacts/contracts/DappVotes.sol/DappVotes.json'
 import { ContestantStruct, PollParams, PollStruct, TruncateParams } from '@/utils/types'
+import { handleBlockchainError } from '@/utils/errorHandler'
 
 const { setWallet, setPolls, setPoll, setContestants } = globalActions
 const ContractAddress = address.address
@@ -13,6 +14,10 @@ let tx: any
 
 if (typeof window !== 'undefined') {
   ethereum = (window as any).ethereum
+}
+
+const reportError = (error: any): void => {
+  handleBlockchainError(error)
 }
 
 const getEthereumContract = async () => {

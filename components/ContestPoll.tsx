@@ -1,19 +1,44 @@
 import { contestPoll } from '@/services/blockchain'
 import { globalActions } from '@/store/globalSlices'
-import { PollStruct, RootState } from '@/utils/types'
-import React, { ChangeEvent, FormEvent, useState } from 'react'
-import { FaTimes, FaUser } from 'react-icons/fa'
+import { ContestantStruct, PollStruct, RootState } from '@/utils/types'
+import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react'
+import { FaTimes, FaUser, FaSpinner } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { checkWalletConnection } from '@/utils/errorHandler'
+import { handleTransaction } from '@/utils/interactionHandler'
 
 const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
   const { setContestModal } = globalActions
-  const { contestModal } = useSelector((states: RootState) => states.globalStates)
+  const { contestModal, wallet, contestants } = useSelector((states: RootState) => states.globalStates)
 
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
   const [contestant, setContestant] = useState({
     name: '',
   })
+  
+  // Check if current user is already a candidate
+  const isAlreadyCandidate = React.useMemo(() => {
+    if (!wallet || !contestants) return false
+    return contestants.some(c => c.voter.toLowerCase() === wallet.toLowerCase())
+  }, [wallet, contestants])
+  
+  // Close modal if user is already a candidate
+  useEffect(() => {
+    if (isAlreadyCandidate && contestModal === 'scale-100') {
+      toast.info('You are already registered as a candidate for this election')
+      closeModal()
+    }
+  }, [isAlreadyCandidate, contestModal])
+
+  // Check if poll voting has started - needed for smart contract validation
+  useEffect(() => {
+    if (contestModal === 'scale-100' && poll.votes > 0) {
+      toast.error('Voting has already begun, cannot register as candidate now')
+      closeModal()
+    }
+  }, [contestModal, poll.votes])
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -25,25 +50,96 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    
+    // Prevent multiple submissions
+    if (isSubmitting) return
 
-    if (!contestant.name) return
+    // Validate input
+    if (!contestant.name) {
+      toast.warn('Please enter your name')
+      return
+    }
 
-    await toast.promise(
-      new Promise<void>((resolve, reject) => {
-        contestPoll(poll.id, contestant.name)
-          .then((tx) => {
-            closeModal()
-            console.log(tx)
-            resolve(tx)
+    // Check wallet connection
+    if (!checkWalletConnection(wallet)) {
+      return
+    }
+    
+    // Check if already a candidate
+    if (isAlreadyCandidate) {
+      toast.warn('You are already registered as a candidate for this election')
+      closeModal()
+      return
+    }
+
+    // Validate poll eligibility
+    if (poll.deleted) {
+      toast.error('This poll has been deleted')
+      closeModal()
+      return
+    }
+    
+    // Add back validation for votes to match smart contract restrictions
+    if (poll.votes > 0) {
+      toast.error('Voting has already begun, cannot register as candidate now')
+      closeModal()
+      return
+    }
+
+    // Make sure the poll hasn't ended
+    if (Date.now() > poll.endsAt) {
+      toast.error('This poll has already ended')
+      closeModal()
+      return
+    }
+
+    try {
+      await toast.promise(
+        handleTransaction(async () => {
+          return new Promise<void>((resolve, reject) => {
+            contestPoll(poll.id, contestant.name)
+              .then((tx) => {
+                closeModal()
+                console.log(tx)
+                resolve(tx)
+              })
+              .catch((error) => {
+                console.error("Transaction error:", error)
+                
+                // Extract error message from blockchain errors
+                let errorMessage = 'Transaction failed'
+                
+                if (error.message && error.message.includes('Poll has votes already')) {
+                  errorMessage = 'Voting has already begun, cannot register as candidate now'
+                } else if (error.message && error.message.includes('Poll not found')) {
+                  errorMessage = 'Poll does not exist or has been deleted'
+                } else if (error.message && error.message.includes('already registered')) {
+                  errorMessage = 'You are already registered as a candidate'
+                } else if (error.data && error.data.message) {
+                  errorMessage = error.data.message
+                } else if (typeof error === 'string') {
+                  errorMessage = error
+                } else if (error.message) {
+                  errorMessage = error.message
+                }
+                
+                reject(errorMessage)
+              })
           })
-          .catch((error) => reject(error))
-      }),
-      {
-        pending: 'Approve transaction...',
-        success: 'Candidate added successfully 👌',
-        error: 'Encountered error 🤯',
-      }
-    )
+        }, setIsSubmitting),
+        {
+          pending: 'Approve transaction...',
+          success: 'Candidate added successfully 👌',
+          error: {
+            render: ({ data }) => {
+              return typeof data === 'string' ? data : 'Transaction failed'
+            }
+          }
+        }
+      )
+    } catch (error) {
+      console.error("Error handling registration:", error)
+    }
   }
 
   const closeModal = () => {
@@ -51,6 +147,7 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
     setContestant({
       name: '',
     })
+    setIsSubmitting(false)
   }
 
   return (
@@ -65,6 +162,7 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
             <button 
               onClick={closeModal} 
               className="text-gray-500 hover:text-red-500 transition-colors focus:outline-none"
+              disabled={isSubmitting}
             >
               <FaTimes size={20} />
             </button>
@@ -89,17 +187,26 @@ const ContestPoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
                   value={contestant.name}
                   onChange={handleChange}
                   required
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
 
             <button
-              className="h-12 w-full rounded-lg font-bold
-                transition-all duration-300 bg-blue-600 hover:bg-blue-700 text-white
-                flex items-center justify-center"
+              className={`h-12 w-full rounded-lg font-bold
+                transition-all duration-300 ${isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white
+                flex items-center justify-center`}
               type="submit"
+              disabled={isSubmitting}
             >
-              Register as Candidate
+              {isSubmitting ? (
+                <>
+                  <FaSpinner className="animate-spin mr-2" />
+                  Processing...
+                </>
+              ) : (
+                'Register as Candidate'
+              )}
             </button>
           </form>
         </div>

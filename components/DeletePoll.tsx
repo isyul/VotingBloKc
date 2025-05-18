@@ -7,14 +7,40 @@ import { FaTimes } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
+import { checkWalletConnection } from '@/utils/errorHandler'
 
 const DeletePoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
   const dispatch = useDispatch()
   const { setDeleteModal } = globalActions
-  const { deleteModal } = useSelector((states: RootState) => states.globalStates)
+  const { deleteModal, wallet } = useSelector((states: RootState) => states.globalStates)
   const router = useRouter()
 
   const handleDelete = async () => {
+    // Check wallet connection
+    if (!checkWalletConnection(wallet)) {
+      return
+    }
+
+    // Validate poll ownership
+    if (wallet !== poll.director) {
+      toast.error('You are not authorized to delete this poll')
+      closeModal()
+      return
+    }
+
+    // Validate poll state
+    if (poll.deleted) {
+      toast.error('This poll has already been deleted')
+      closeModal()
+      return
+    }
+
+    if (poll.votes > 0) {
+      toast.error('This poll has votes and cannot be deleted')
+      closeModal()
+      return
+    }
+
     await toast.promise(
       new Promise<void>((resolve, reject) => {
         deletePoll(poll.id)
@@ -82,6 +108,7 @@ const DeletePoll: React.FC<{ poll: PollStruct }> = ({ poll }) => {
                 className="flex-1 py-3 rounded-lg font-medium
                 bg-red-600 hover:bg-red-700 text-white transition-all"
                 onClick={handleDelete}
+                disabled={!wallet || wallet !== poll.director || poll.votes > 0}
               >
                 Delete Election
               </button>

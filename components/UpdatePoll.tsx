@@ -5,11 +5,12 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { FaTimes, FaCalendarAlt, FaRegClock, FaEdit, FaHeading } from 'react-icons/fa'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { checkWalletConnection } from '@/utils/errorHandler'
 
 const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
   const dispatch = useDispatch()
   const { setUpdateModal } = globalActions
-  const { updateModal } = useSelector((states: RootState) => states.globalStates)
+  const { updateModal, wallet } = useSelector((states: RootState) => states.globalStates)
 
   const [poll, setPoll] = useState<PollParams>({
     title: '',
@@ -33,10 +34,51 @@ const UpdatePoll: React.FC<{ pollData: PollStruct }> = ({ pollData }) => {
   const handleUpdate = async (e: FormEvent) => {
     e.preventDefault()
 
-    if (!poll.title || !poll.description || !poll.startsAt || !poll.endsAt) return
+    // Validate form fields
+    if (!poll.title || !poll.description || !poll.startsAt || !poll.endsAt) {
+      toast.warn('Please fill in all required fields')
+      return
+    }
 
-    poll.startsAt = new Date(poll.startsAt).getTime()
-    poll.endsAt = new Date(poll.endsAt).getTime()
+    // Check wallet connection
+    if (!checkWalletConnection(wallet)) {
+      return
+    }
+
+    // Validate poll ownership
+    if (wallet !== pollData.director) {
+      toast.error('You are not authorized to update this poll')
+      return
+    }
+
+    // Validate poll state
+    if (pollData.deleted) {
+      toast.error('This poll has been deleted and cannot be updated')
+      return
+    }
+
+    if (pollData.votes > 0) {
+      toast.error('This poll already has votes and cannot be updated')
+      return
+    }
+
+    const startsAtTimestamp = new Date(poll.startsAt).getTime()
+    const endsAtTimestamp = new Date(poll.endsAt).getTime()
+
+    // Validate date inputs
+    if (startsAtTimestamp <= Date.now()) {
+      toast.warn('Start date must be in the future')
+      return
+    }
+
+    if (endsAtTimestamp <= startsAtTimestamp) {
+      toast.warn('End date must be after start date')
+      return
+    }
+
+    // Update with validated timestamps
+    poll.startsAt = startsAtTimestamp
+    poll.endsAt = endsAtTimestamp
 
     await toast.promise(
       new Promise<void>((resolve, reject) => {
